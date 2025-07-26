@@ -114,11 +114,15 @@ skills:
       - name: Salsa Dancing
         description: ''
         percent: 60
-        icon: dance
+        icon: person-simple-run
+      - name: Running
+        description: ''
+        percent: 50
+        icon: person-simple-run
 
 languages:
   - name: English
-    percent: 100
+    percent: 99
   - name: German
     percent: 100
 
