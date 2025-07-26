@@ -1,6 +1,6 @@
 ---
 # Display name
-title: Darius P. Schaub
+title: Darius Schaub
 
 # Name pronunciation (optional)
 name_pronunciation: ''
