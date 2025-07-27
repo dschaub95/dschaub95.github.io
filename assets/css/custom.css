@@ -1,0 +1,5 @@
+/* light mode */
+.bg-theme{background:#f6f7fb;}
+
+/* dark mode (Hugo Blox adds `.dark` on the root) */
+.dark .bg-theme{background:#0f172a;}
