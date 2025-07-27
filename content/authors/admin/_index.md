@@ -160,4 +160,4 @@ awards:
 
 ## About Me
 
-👋 Hi, I'm Darius. I'm a PhD student at the University Medical Center Hamburg-Eppendorf, where I'm working on understanding the spatial organization of cells in health and disease.
+👋 Hi, I'm Darius. I'm a PhD student at the University Medical Center Hamburg-Eppendorf, where I'm working on understanding the spatial organization of cells in health and disease. Please reach out to collaborate! 😃
