@@ -19,7 +19,9 @@ sections:
         text: Download CV
         url: uploads/resume.pdf
     design:
-      css_class: "bg-primary-50 dark:bg-primary-900"
+      css_class: "dark"
+      background:
+        color: "black"
   - block: markdown
     content:
       title: '📚 My Research'
