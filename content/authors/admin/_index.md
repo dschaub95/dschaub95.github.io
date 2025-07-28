@@ -45,8 +45,8 @@ profiles:
     url: https://orcid.org/0009-0000-8685-3263
 
 interests:
-  - biomedical AI
-  - complex systems
+  - systems biology
+  - complex systems (control)
   - collective intelligence
 
 education:
