@@ -70,12 +70,12 @@ education:
       - lorem ipsum dolor sit amet, consectetur adipiscing elit
       - lorem ipsum dolor sit amet, consectetur adipiscing elit
       - lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - area: BSc Nano Science
+  - area: BSc Nanoscience
     institution: University of Hamburg
     date_start: 2016-01-01
     date_end: 2020-12-31
     summary: |
-      GPA: 3.7/4.0
+      GPA: 3.65/4.0
       
       Courses included:
       - lorem ipsum dolor sit amet, consectetur adipiscing elit
