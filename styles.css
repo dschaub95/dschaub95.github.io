@@ -16,6 +16,9 @@ body {
     line-height: 1.6;
     color: #333;
     background-color: #f5f5f5;
+    width: 100%;
+    overflow-x: hidden;
+    position: relative;
 }
 
 /* Container */
@@ -23,6 +26,8 @@ body {
     width: 100%;
     min-height: 100vh;
     padding: 0;
+    overflow-x: hidden;
+    max-width: 100%;
 }
 
 /* Profile Section */
@@ -31,9 +36,11 @@ body {
     padding-bottom: 40px;
     position: relative;
     width: 100%;
+    max-width: 100%;
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    box-sizing: border-box;
 }
 
 .profile-section::after {
@@ -136,13 +143,18 @@ body {
 .content-section {
     background-color: #fff;
     width: 100%;
+    max-width: 100%;
     min-height: 100vh;
     padding: clamp(20px, 5vw, 40px) clamp(15px, 2.5vw, 20px);
+    box-sizing: border-box;
+    overflow-x: hidden;
 }
 
 .content-section > section {
     max-width: min(800px, calc(100% - 2 * clamp(15px, 2.5vw, 20px)));
     margin: 0 auto;
+    box-sizing: border-box;
+    overflow-x: hidden;
 }
 
 .content-section section {
@@ -336,12 +348,19 @@ h2 {
     padding: 15px;
     background-color: #f8f9fa;
     border-radius: 4px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
 }
 
 .publication-citation {
     color: #333;
     font-size: 1em;
     line-height: 1.6;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 /* Attribution Footer */
@@ -356,6 +375,10 @@ h2 {
     color: #666;
     background-color: #f5f5f5;
     text-align: center;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
 }
 
 .attribution a,
@@ -364,7 +387,10 @@ h2 {
     color: #666;
     text-decoration: none;
     transition: color 0.2s;
-    line-height: 1;
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
 }
 
 .attribution a:hover {
