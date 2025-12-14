@@ -343,6 +343,33 @@ h2 {
     line-height: 1.6;
 }
 
+/* Attribution Footer */
+.attribution {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 20px;
+    margin-top: 0;
+    min-height: 50px;
+    font-size: 0.85em;
+    color: #666;
+    background-color: #f5f5f5;
+}
+
+.attribution a {
+    display: flex;
+    align-items: center;
+    color: #666;
+    text-decoration: none;
+    transition: color 0.2s;
+    line-height: 1;
+}
+
+.attribution a:hover {
+    color: #333;
+    text-decoration: underline;
+}
+
 /* Responsive Design */
 @media (max-width: 600px) {
 
