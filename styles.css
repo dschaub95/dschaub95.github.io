@@ -327,12 +327,13 @@ h2 {
 .education-list li strong {
     color: #333;
     font-size: 1em;
-    line-height: 1;
+    line-height: 1.2;
+    display: block;
 }
 
 .education-location {
-    margin-top: 0;
-    line-height: 1;
+    line-height: 1.2;
+    display: block;
 }
 
 /* Publications */
