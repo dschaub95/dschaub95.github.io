@@ -1,0 +1,27 @@
+[project]
+name = "personal-website"
+version = "0.1.0"
+description = "Personal website with BibTeX to HTML conversion"
+requires-python = ">=3.9"
+dependencies = [
+    "bibtexparser>=1.4.0",
+    "pybtex>=0.24.0",
+    "pybtex-apa7-style>=0.1.0",
+    "setuptools",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pre-commit>=3.0.0",
+    "ruff>=0.1.0",
+]
+
+[project.scripts]
+bibtex-to-html = "scripts.bibtex_to_html:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["scripts"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

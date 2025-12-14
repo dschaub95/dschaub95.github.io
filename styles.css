@@ -1,0 +1,357 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 0;
+}
+
+/* Profile Section */
+.profile-section {
+    margin-bottom: 50px;
+    padding-bottom: 40px;
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.profile-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    height: 1px;
+    background: linear-gradient(
+        to right,
+        transparent 0%,
+        transparent 5%,
+        #e0e0e0 10%,
+        #e0e0e0 90%,
+        transparent 95%,
+        transparent 100%
+    );
+}
+
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    max-width: 800px;
+    width: fit-content;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.profile-image-container {
+    flex-shrink: 0;
+}
+
+.profile-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-info {
+    text-align: center;
+    flex: 1;
+}
+
+.profile-name {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.profile-title {
+    font-size: 1.1em;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.profile-affiliation {
+    font-size: 0.95em;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.social-icon {
+    color: #000;
+    text-decoration: none;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+}
+
+.social-icon:hover {
+    color: #000;
+}
+
+.social-icon i,
+.social-icon svg {
+    display: block;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+}
+
+/* Content Section */
+.content-section {
+    background-color: #fff;
+    width: 100%;
+    min-height: 100vh;
+    padding: clamp(20px, 5vw, 40px) clamp(15px, 2.5vw, 20px);
+}
+
+.content-section > section {
+    max-width: min(800px, calc(100% - 2 * clamp(15px, 2.5vw, 20px)));
+    margin: 0 auto;
+}
+
+.content-section section {
+    margin-bottom: 30px;
+}
+
+.content-section section:last-child {
+    margin-bottom: 0;
+}
+
+h2 {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+#about-me p {
+    color: #555;
+    margin-bottom: 12px;
+    font-size: 1em;
+    line-height: 1.6;
+}
+
+.cv-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.95em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-decoration: none;
+}
+
+.cv-button:hover {
+    background-color: #555;
+}
+
+.cv-button svg {
+    display: block;
+}
+
+.cv-button-icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+/* Interests and Education Container */
+.interests-education-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: min(800px, calc(100% - 2 * clamp(15px, 2.5vw, 20px)));
+    margin: 0 auto 30px;
+}
+
+.interests-education-container > section {
+    margin-bottom: 0;
+}
+
+/* Side-by-side layout with responsive gap */
+@media (min-width: 600px) {
+    .interests-education-container {
+        flex-direction: row;
+        gap: clamp(3px, 3vw, 30px);
+    }
+
+    .interests-education-container > section {
+        flex: 1;
+        min-width: 0;
+    }
+}
+
+@media (min-width: 900px) {
+    .interests-education-container {
+        gap: 30px;
+    }
+
+    .profile-container {
+        flex-direction: row;
+        align-items: center;
+        text-align: left;
+        gap: 30px;
+        max-width: 800px;
+        width: fit-content;
+    }
+
+    .profile-info {
+        text-align: left;
+    }
+
+    .social-icons {
+        justify-content: flex-start;
+    }
+}
+
+/* Interests */
+.interests-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.interests-list li {
+    color: #555;
+    margin-bottom: 4px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.interests-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #666;
+    font-weight: bold;
+}
+
+/* Education */
+.education-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.education-list li {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 6px;
+    color: #555;
+    align-items: flex-start;
+}
+
+.education-list li:last-child {
+    margin-bottom: 0;
+}
+
+.education-icon {
+    flex-shrink: 0;
+    color: #000;
+    margin-top: 2px;
+    width: 18px;
+    height: 18px;
+}
+
+.education-list li div {
+    flex: 1;
+    line-height: 1;
+    font-size: 0.95em;
+}
+
+.education-list li strong {
+    color: #333;
+    display: block;
+    margin-bottom: 0;
+    font-size: 1em;
+    line-height: 1;
+}
+
+.education-list li br {
+    line-height: 0;
+    display: block;
+    margin: 0;
+    padding: 0;
+    height: 0;
+    font-size: 0;
+    content: "";
+}
+
+.education-location {
+    display: block;
+    margin-top: -0.7em;
+    line-height: 1;
+    padding-top: 0;
+}
+
+/* Publications */
+#publications {
+    margin-top: 30px;
+}
+
+.publication {
+    margin-bottom: 25px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+.publication-citation {
+    color: #333;
+    font-size: 1em;
+    line-height: 1.6;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+
+    .profile-image {
+        width: 150px;
+        height: 150px;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+}
