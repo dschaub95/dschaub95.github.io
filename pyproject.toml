@@ -18,6 +18,7 @@ dev = [
 
 [project.scripts]
 bibtex-to-html = "scripts.bibtex_to_html:main"
+serve = "scripts.serve:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["scripts"]
