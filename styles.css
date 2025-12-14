@@ -318,33 +318,21 @@ h2 {
 
 .education-list li div {
     flex: 1;
-    line-height: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
     font-size: 0.95em;
 }
 
 .education-list li strong {
     color: #333;
-    display: block;
-    margin-bottom: 0;
     font-size: 1em;
     line-height: 1;
 }
 
-.education-list li br {
-    line-height: 0;
-    display: block;
-    margin: 0;
-    padding: 0;
-    height: 0;
-    font-size: 0;
-    content: "";
-}
-
 .education-location {
-    display: block;
-    margin-top: -0.7em;
+    margin-top: 0;
     line-height: 1;
-    padding-top: 0;
 }
 
 /* Publications */
