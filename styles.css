@@ -39,7 +39,9 @@ body {
 
 /* Profile Section */
 .profile-section {
-    margin-bottom: 50px;
+    background-color: #fff;
+    margin-bottom: 0;
+    padding: clamp(20px, 5vw, 40px) clamp(15px, 2.5vw, 20px);
     padding-bottom: 40px;
     position: relative;
     width: 100%;
@@ -54,9 +56,9 @@ body {
     content: '';
     position: absolute;
     bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
     height: 1px;
     background: linear-gradient(
         to right,
