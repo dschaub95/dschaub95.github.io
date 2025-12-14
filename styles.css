@@ -354,11 +354,12 @@ h2 {
     font-size: 0.85em;
     color: #666;
     background-color: #f5f5f5;
+    text-align: center;
 }
 
-.attribution a {
-    display: flex;
-    align-items: center;
+.attribution a,
+.attribution a:link,
+.attribution a:visited {
     color: #666;
     text-decoration: none;
     transition: color 0.2s;
