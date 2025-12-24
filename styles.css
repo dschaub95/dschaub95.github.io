@@ -177,16 +177,26 @@ body {
     transform: translateX(-50%);
     width: 100vw;
     height: 1px;
-    background: linear-gradient(
+    background-color: var(--border-color);
+    transition: background-color 0.3s ease;
+    mask-image: linear-gradient(
         to right,
         transparent 0%,
         transparent 5%,
-        var(--border-color) 10%,
-        var(--border-color) 90%,
+        black 10%,
+        black 90%,
         transparent 95%,
         transparent 100%
     );
-    transition: background 0.3s ease;
+    -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        transparent 5%,
+        black 10%,
+        black 90%,
+        transparent 95%,
+        transparent 100%
+    );
 }
 
 .profile-container {
@@ -489,11 +499,18 @@ h2 {
     word-wrap: break-word;
     overflow-wrap: break-word;
     hyphens: auto;
+    transition: color 0.3s ease;
+}
+
+.publication-citation strong {
+    color: var(--text-primary);
+    transition: color 0.3s ease;
 }
 
 .publication-citation a {
     color: var(--link-color);
     text-decoration: underline;
+    transition: color 0.3s ease;
 }
 
 .publication-citation a:hover {
