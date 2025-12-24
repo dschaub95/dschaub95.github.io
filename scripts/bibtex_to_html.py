@@ -274,6 +274,12 @@ def parse_bibtex(bibtex_path):
             # Convert to string
             citation_str = str(citation_text)
 
+            # Check if entry has a DOI that's not in the formatted citation
+            doi_field = entry.fields.get("doi", "")
+            if doi_field and "doi:" not in citation_str.lower():
+                # Append DOI to citation if it exists in entry but not in formatted text
+                citation_str += f" doi:{doi_field}"
+
             # Post-process to add clickable DOI links and bold author name
             citation_html = _process_citation_html(citation_str)
 
