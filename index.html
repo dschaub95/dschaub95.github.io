@@ -9,6 +9,25 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
+    <nav class="navbar">
+        <button class="theme-toggle" type="button" aria-label="Toggle theme" id="theme-toggle">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon sun-icon" aria-hidden="true">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2"></path>
+                <path d="M12 20v2"></path>
+                <path d="m4.93 4.93 1.41 1.41"></path>
+                <path d="m17.66 17.66 1.41 1.41"></path>
+                <path d="M2 12h2"></path>
+                <path d="M20 12h2"></path>
+                <path d="m6.34 17.66-1.41 1.41"></path>
+                <path d="m19.07 4.93-1.41 1.41"></path>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon moon-icon" aria-hidden="true">
+                <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path>
+            </svg>
+            <span class="sr-only">Toggle theme</span>
+        </button>
+    </nav>
     <section class="profile-section">
                 <div class="profile-container">
                     <div class="profile-image-container">
@@ -136,6 +155,45 @@
     </footer>
     <script>
         lucide.createIcons();
+
+        // Theme toggle functionality
+        (function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const html = document.documentElement;
+
+            function getInitialTheme() {
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme) {
+                    return savedTheme;
+                }
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+
+            function setTheme(theme) {
+                html.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+            }
+
+            function toggleTheme() {
+                const currentTheme = html.getAttribute('data-theme') || getInitialTheme();
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                setTheme(newTheme);
+            }
+
+            // Initialize theme on page load
+            const initialTheme = getInitialTheme();
+            setTheme(initialTheme);
+
+            // Listen for system theme changes (only if no saved preference)
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                if (!localStorage.getItem('theme')) {
+                    setTheme(e.matches ? 'dark' : 'light');
+                }
+            });
+
+            // Add click handler
+            themeToggle.addEventListener('click', toggleTheme);
+        })();
     </script>
 </body>
 </html>
