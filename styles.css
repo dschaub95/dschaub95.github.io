@@ -340,7 +340,7 @@ h2 {
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.2s;
-    text-decoration: none;
+    text-decoration: none !important;
 }
 
 .cv-button:hover {
