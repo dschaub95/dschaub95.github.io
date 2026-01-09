@@ -230,6 +230,35 @@ def _get_usera_count(entry):
     return 0
 
 
+def _is_first_author_publication(entry, style, backend, bib_data):
+    """Check if entry qualifies as first-author publication"""
+    # Check if usera field exists and is non-empty (shared first authorship)
+    if _get_usera_count(entry) > 0:
+        return True
+
+    # Check if first author is "Schaub, D. P." or "Schaub, D."
+    try:
+        persons = entry.persons.get("author", [])
+        if not persons:
+            return False
+
+        context = {
+            "entry": entry,
+            "style": style,
+            "bib_data": bib_data,
+        }
+
+        # Format first author name
+        first_person = persons[0]
+        formatted_name = style.format_name(first_person, style.abbreviate_names)
+        name_str = str(formatted_name.format_data(context).render(backend))
+
+        # Check if it matches "Schaub, D. P." or "Schaub, D."
+        return name_str in ("Schaub, D. P.", "Schaub, D.")
+    except Exception:
+        return False
+
+
 def _join_author_names(formatted_name_strings):
     """Join formatted author names with appropriate separators (APA style)"""
     if len(formatted_name_strings) == 1:
@@ -407,7 +436,7 @@ def _get_sort_key(entry_item):
     return (year, month)
 
 
-def _parse_and_sort_bibtex(bibtex_path):
+def _parse_and_sort_bibtex(bibtex_path, selected_only=False):
     """Parse BibTeX file and return sorted entries with style/backend setup"""
     _patch_apa7_style()
 
@@ -424,6 +453,14 @@ def _parse_and_sort_bibtex(bibtex_path):
         reverse=True,
     )
 
+    # Filter to first-author publications if selected_only is True
+    if selected_only:
+        sorted_entries = [
+            (key, entry)
+            for key, entry in sorted_entries
+            if _is_first_author_publication(entry, style, backend, bib_data)
+        ]
+
     from pybtex.database import BibliographyData
 
     sorted_bib_data = BibliographyData({key: entry for key, entry in sorted_entries})
@@ -431,11 +468,11 @@ def _parse_and_sort_bibtex(bibtex_path):
     return sorted_entries, style, backend, sorted_bib_data
 
 
-def parse_bibtex_card_mode(bibtex_path):
+def parse_bibtex_card_mode(bibtex_path, selected_only=False):
     """Parse BibTeX file and return formatted HTML in card mode with visual prioritization"""
     try:
         sorted_entries, style, backend, sorted_bib_data = _parse_and_sort_bibtex(
-            bibtex_path
+            bibtex_path, selected_only
         )
         if sorted_entries is None:
             return "<p>No publications found.</p>"
@@ -487,11 +524,11 @@ def _handle_parse_error(e):
     return f"<p>Error loading publications: {e}</p>"
 
 
-def parse_bibtex(bibtex_path):
+def parse_bibtex(bibtex_path, selected_only=False):
     """Parse BibTeX file and return formatted HTML in APA style"""
     try:
         sorted_entries, style, backend, sorted_bib_data = _parse_and_sort_bibtex(
-            bibtex_path
+            bibtex_path, selected_only
         )
         if sorted_entries is None:
             return "<p>No publications found.</p>"
@@ -539,9 +576,8 @@ def inject_html(html_path, publications_html):
             content = f.read()
 
         # Find the publications section and replace content between <h2> and </section>
-        pattern = (
-            r'(<section id="publications">\s*<h2>Publications</h2>)(.*?)(</section>)'
-        )
+        # Match any h2 heading (e.g., "Publications" or "Selected Publications")
+        pattern = r'(<section id="publications">\s*<h2>[^<]*</h2>)(.*?)(</section>)'
 
         # Check if any publications have superscript asterisks (indicating shared first authorship)
         has_shared_authorship = "<sup>*</sup>" in publications_html
@@ -575,6 +611,11 @@ def main():
         default="card",
         help="Output mode: 'citation' for APA citation style (default), 'card' for card-based layout",
     )
+    parser.add_argument(
+        "--selected",
+        action="store_true",
+        help="Only show first-author publications (usera field or first author is Schaub, D. P. or Schaub, D.)",
+    )
     args = parser.parse_args()
 
     # Get paths relative to script location
@@ -594,9 +635,9 @@ def main():
 
     # Parse BibTeX and generate HTML based on mode
     if args.mode == "card":
-        publications_html = parse_bibtex_card_mode(bibtex_path)
+        publications_html = parse_bibtex_card_mode(bibtex_path, args.selected)
     else:
-        publications_html = parse_bibtex(bibtex_path)
+        publications_html = parse_bibtex(bibtex_path, args.selected)
 
     # Inject into index.html
     inject_html(html_path, publications_html)
