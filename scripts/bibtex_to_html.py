@@ -52,21 +52,35 @@ _MONTH_MAP = {
 }
 
 
-def _process_citation_html(citation_text):
+def _process_citation_html(
+    citation_text, entry, style, backend, bib_data, usera_count=0
+):
     """
     Post-process citation text to:
     1. Remove month from date (APA style shows only year for journal articles)
     2. Make title bold
     3. Make DOI links clickable
     4. Make author name (Schaub, D. P. or Schaub, D.) bold
+    5. Add superscript asterisks for shared first authors
 
     Args:
         citation_text: Plain text citation string
+        entry: BibTeX entry object
+        style: Citation style object
+        backend: Backend object for rendering
+        bib_data: Bibliography data object
+        usera_count: Number of shared first authors (default: 0)
 
     Returns:
-        HTML string with clickable DOIs and bold author name
+        HTML string with clickable DOIs, bold author name, and shared first author stars
     """
     citation_str = str(citation_text)
+
+    # Add superscript asterisks for shared first authors using raw author list
+    if usera_count > 0:
+        citation_str = _add_shared_first_author_stars_citation(
+            citation_str, entry, style, backend, bib_data, usera_count
+        )
 
     # Remove month from date - APA style shows only year for journal articles
     # Pattern: (YYYY , Month) -> (YYYY)
@@ -127,12 +141,23 @@ def _process_citation_html(citation_text):
     # Now escape HTML
     citation_html = html.escape(citation_str)
 
-    # Replace placeholders with HTML tags (using helper function)
+    # Replace asterisk placeholders with actual HTML superscript tags FIRST
     citation_html = citation_html.replace(
-        "__SCH_AUB_D_P__", "<strong>Schaub, D. P.</strong>"
+        html.escape("__ASTERISK_PLACEHOLDER__"), "<sup>*</sup>"
     )
-    citation_html = citation_html.replace(
-        "__SCH_AUB_D__", "<strong>Schaub, D.</strong>"
+
+    # Replace author name placeholders with HTML tags, including asterisk if immediately after
+    # Match "Schaub, D. P." followed by optional asterisk
+    citation_html = re.sub(
+        r"__SCH_AUB_D_P__(<sup>\*</sup>)?",
+        r"<strong>Schaub, D. P.\1</strong>",
+        citation_html,
+    )
+    # Match "Schaub, D." followed by optional asterisk
+    citation_html = re.sub(
+        r"__SCH_AUB_D__(<sup>\*</sup>)?",
+        r"<strong>Schaub, D.\1</strong>",
+        citation_html,
     )
 
     # Replace title placeholders with bold tags
@@ -194,38 +219,121 @@ def _patch_apa7_style():
         pass
 
 
+def _get_usera_count(entry):
+    """Get number of shared first authors from usera field"""
+    try:
+        usera_field = entry.fields.get("usera", "").strip()
+        if usera_field:
+            return int(usera_field)
+    except (ValueError, AttributeError):
+        pass
+    return 0
+
+
+def _join_author_names(formatted_name_strings):
+    """Join formatted author names with appropriate separators (APA style)"""
+    if len(formatted_name_strings) == 1:
+        return formatted_name_strings[0]
+    elif len(formatted_name_strings) == 2:
+        return formatted_name_strings[0] + " & " + formatted_name_strings[1]
+    else:
+        # First n-1 authors separated by ", "
+        result = ", ".join(formatted_name_strings[:-1])
+        # Last author with ", & "
+        result += ", & " + formatted_name_strings[-1]
+        return result
+
+
+def _format_author_names(entry, style, backend, bib_data, usera_count, asterisk_marker):
+    """Format author names from BibTeX entry and add asterisk markers to first N authors"""
+    persons = entry.persons.get("author", [])
+    if not persons:
+        return []
+
+    context = {
+        "entry": entry,
+        "style": style,
+        "bib_data": bib_data,
+    }
+
+    formatted_name_strings = []
+    for i, person in enumerate(persons):
+        formatted_name = style.format_name(person, style.abbreviate_names)
+        name_str = str(formatted_name.format_data(context).render(backend))
+        if i < usera_count:
+            name_str += asterisk_marker
+        formatted_name_strings.append(name_str)
+
+    return formatted_name_strings
+
+
+def _format_authors_for_citation(entry, style, backend, bib_data, usera_count):
+    """Format authors from BibTeX entry for citation mode, adding asterisk placeholders to first N authors"""
+    try:
+        formatted_name_strings = _format_author_names(
+            entry, style, backend, bib_data, usera_count, "__ASTERISK_PLACEHOLDER__"
+        )
+        return (
+            _join_author_names(formatted_name_strings) if formatted_name_strings else ""
+        )
+    except Exception:
+        return ""
+
+
+def _add_shared_first_author_stars_citation(
+    citation_str, entry, style, backend, bib_data, usera_count
+):
+    """Add superscript asterisks to the first N authors in a citation string"""
+    if not citation_str or usera_count <= 0:
+        return citation_str
+
+    # Find the authors part (everything before the year in parentheses)
+    # Pattern: Authors (Year [Month]). Title...
+    # Match year with optional month: (2026) or (2026 , January)
+    year_match = re.search(r"\s*\(\d{4}(?:\s*,\s*[A-Za-z]+)?\)", citation_str)
+    if not year_match:
+        return citation_str
+
+    # Extract authors part (everything before the year)
+    rest_of_citation = citation_str[year_match.start() :]
+
+    # Format authors with asterisk placeholders from the raw entry
+    authors_with_stars = _format_authors_for_citation(
+        entry, style, backend, bib_data, usera_count
+    )
+
+    # Reconstruct the citation
+    return authors_with_stars + rest_of_citation
+
+
 def _bold_author_name(text):
-    """Make author name (Schaub, D. P. or Schaub, D.) bold in text"""
-    text = re.sub(r"(Schaub, D\.\s*P\.)", r"<strong>Schaub, D. P.</strong>", text)
-    return re.sub(r"(Schaub, D\.)(?!\s*P\.)", r"<strong>Schaub, D.</strong>", text)
+    """Make author name (Schaub, D. P. or Schaub, D.) bold in text, including asterisk if present"""
+    # Match "Schaub, D. P." with optional asterisk (longer pattern first)
+    text = re.sub(
+        r"(Schaub, D\.\s*P\.)(<sup>\*</sup>)?",
+        r"<strong>\1\2</strong>",
+        text,
+    )
+    # Match "Schaub, D." (not followed by P.) with optional asterisk
+    text = re.sub(
+        r"(Schaub, D\.)(?!\s*P\.)(<sup>\*</sup>)?",
+        r"<strong>\1\2</strong>",
+        text,
+    )
+    return text
 
 
 def _format_authors(entry, style, backend, bib_data):
     """Format authors from BibTeX entry"""
     try:
-        from pybtex.style.template import join
-
-        persons = entry.persons.get("author", [])
-        if not persons:
+        usera_count = _get_usera_count(entry)
+        formatted_name_strings = _format_author_names(
+            entry, style, backend, bib_data, usera_count, "<sup>*</sup>"
+        )
+        if not formatted_name_strings:
             return ""
 
-        # Format names using the style's formatting
-        formatted_names = [
-            style.format_name(person, style.abbreviate_names) for person in persons
-        ]
-
-        # Join names with commas using the style's join template
-        authors_node = join(sep=", ", sep2=" & ", last_sep=", & ")[formatted_names]
-
-        # Create context dictionary for formatting
-        context = {
-            "entry": entry,
-            "style": style,
-            "bib_data": bib_data,
-        }
-
-        # Format and render to string, then make author name bold
-        authors_str = str(authors_node.format_data(context).render(backend))
+        authors_str = _join_author_names(formatted_name_strings)
         return _bold_author_name(authors_str)
     except Exception:
         return ""
@@ -399,8 +507,19 @@ def parse_bibtex(bibtex_path):
             if doi_field and "doi:" not in citation_str.lower():
                 citation_str += f" doi:{doi_field}"
 
+            # Get number of shared first authors from usera field
+            usera_count = 0
+            try:
+                usera_field = entry.fields.get("usera", "").strip()
+                if usera_field:
+                    usera_count = int(usera_field)
+            except (ValueError, AttributeError):
+                usera_count = 0
+
             # Post-process to add clickable DOI links and bold author name
-            citation_html = _process_citation_html(citation_str)
+            citation_html = _process_citation_html(
+                citation_str, entry, style, backend, sorted_bib_data, usera_count
+            )
 
             html_parts.append(f"""                <div class="publication">
                     <div class="publication-citation">{citation_html}</div>
@@ -424,7 +543,16 @@ def inject_html(html_path, publications_html):
             r'(<section id="publications">\s*<h2>Publications</h2>)(.*?)(</section>)'
         )
 
-        replacement = f"\\1\n{publications_html}            \\3"
+        # Check if any publications have superscript asterisks (indicating shared first authorship)
+        has_shared_authorship = "<sup>*</sup>" in publications_html
+
+        # Add equal contribution note if there are shared first authors
+        if has_shared_authorship:
+            note_html = '\n            <p class="publication-note" style="font-size: 0.9em; text-align: right;"><strong>*</strong> indicates equal contribution</p>'
+        else:
+            note_html = ""
+
+        replacement = f"\\1\n{publications_html}{note_html}            \\3"
 
         new_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
 
