@@ -444,7 +444,7 @@ def main():
     parser.add_argument(
         "--mode",
         choices=["citation", "card"],
-        default="citation",
+        default="card",
         help="Output mode: 'citation' for APA citation style (default), 'card' for card-based layout",
     )
     args = parser.parse_args()
