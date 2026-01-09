@@ -75,3 +75,7 @@ A simple single-page personal website with automatic BibTeX to HTML conversion, 
 - `scripts/bibtex_to_html.py`: Parses BibTeX file using pybtex, supports two output modes via command-line argument (--mode): citation mode (default) formats entries in APA 7th edition citation style as formatted text blocks, card mode formats entries as visually prioritized cards with journal name (small, black) above title (bold, larger), authors (small, gray) below title, and call-to-action link button. Generates HTML and injects into index.html publications section, handles errors gracefully.
 - `scripts/serve.py`: Local HTTP server script that calls `python -m http.server`, changes to project root directory before serving, supports custom port via command-line argument (default: 8000).
 - `.github/workflows/deploy.yml`: GitHub Actions workflow that triggers on push to main, installs uv and dependencies, runs BibTeX conversion, deploys to GitHub Pages.
+
+## License
+
+Licensed under the MIT License. See LICENSE.
