@@ -10,7 +10,12 @@
 </head>
 <body>
     <nav class="navbar">
-        <button class="theme-toggle" type="button" aria-label="Toggle theme" id="theme-toggle">
+        <div class="navbar-content">
+            <div class="navbar-links">
+                <a href="#profile" class="navbar-link">Darius Schaub</a>
+                <a href="#publications" class="navbar-link">Publications</a>
+            </div>
+            <button class="theme-toggle" type="button" aria-label="Toggle theme" id="theme-toggle">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon sun-icon" aria-hidden="true">
                 <circle cx="12" cy="12" r="4"></circle>
                 <path d="M12 2v2"></path>
@@ -26,9 +31,10 @@
                 <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path>
             </svg>
             <span class="sr-only">Toggle theme</span>
-        </button>
+            </button>
+        </div>
     </nav>
-    <section class="profile-section">
+    <section id="profile" class="profile-section">
                 <div class="profile-container">
                     <div class="profile-image-container">
                         <img src="data/image.png" alt="Darius Schaub" class="profile-image">
