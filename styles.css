@@ -633,12 +633,14 @@ h2 {
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
+    gap: 0.3em;
     padding: 15px 20px;
     min-height: 50px;
     font-size: 0.85em;
     color: var(--text-tertiary);
     background-color: var(--bg-primary);
     transition: background-color 0.3s ease, color 0.3s ease;
+    text-align: center;
 }
 
 .attribution a {
