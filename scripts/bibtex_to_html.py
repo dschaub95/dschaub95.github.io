@@ -391,15 +391,15 @@ def _format_journal_display(journal, year):
     return f"{journal} ({year})" if year else journal
 
 
-def _get_link_info(entry):
+def _get_link_info(entry, display_text="View Publication"):
     """Get link URL and text from entry (DOI preferred over URL)"""
     doi = entry.fields.get("doi", "").strip()
     if doi:
-        return f"https://doi.org/{doi}", "Read Paper"
+        return f"https://doi.org/{doi}", display_text
 
     url = entry.fields.get("url", "").strip()
     if url:
-        return url, "Read Paper"
+        return url, display_text
 
     return "", ""
 
@@ -612,9 +612,9 @@ def main():
         help="Output mode: 'citation' for APA citation style (default), 'card' for card-based layout",
     )
     parser.add_argument(
-        "--selected",
+        "--all",
         action="store_true",
-        help="Only show first-author publications (usera field or first author is Schaub, D. P. or Schaub, D.)",
+        help="Show all publications (default is to show only first-author publications)",
     )
     args = parser.parse_args()
 
@@ -635,9 +635,9 @@ def main():
 
     # Parse BibTeX and generate HTML based on mode
     if args.mode == "card":
-        publications_html = parse_bibtex_card_mode(bibtex_path, args.selected)
+        publications_html = parse_bibtex_card_mode(bibtex_path, not args.all)
     else:
-        publications_html = parse_bibtex(bibtex_path, args.selected)
+        publications_html = parse_bibtex(bibtex_path, not args.all)
 
     # Inject into index.html
     inject_html(html_path, publications_html)
