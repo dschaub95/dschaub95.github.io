@@ -33,7 +33,7 @@ jobs:
         run: uv sync
 
       - name: Run BibTeX to HTML conversion
-        run: uv run bibtex-to-html --mode card --selected
+        run: uv run bibtex-to-html --mode card
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
