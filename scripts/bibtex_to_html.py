@@ -376,9 +376,10 @@ def _clean_title(title):
 
 
 def _get_journal(entry):
-    """Extract journal name with fallback to publisher or archiveprefix"""
+    """Extract journal name with fallback to booktitle, publisher or archiveprefix"""
     return (
         entry.fields.get("journal", "").strip()
+        or entry.fields.get("booktitle", "").strip()
         or entry.fields.get("publisher", "").strip()
         or entry.fields.get("archiveprefix", "").strip()
     )
