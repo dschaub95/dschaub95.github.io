@@ -392,6 +392,14 @@ def _format_journal_display(journal, year):
     return f"{journal} ({year})" if year else journal
 
 
+_EXTERNAL_LINK_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>'
+
+
+def _link_html(url, text):
+    """Render a card call-to-action link"""
+    return f'                        <a href="{html.escape(url)}" target="_blank" rel="noopener noreferrer" class="publication-link">{html.escape(text)}{_EXTERNAL_LINK_ICON}</a>'
+
+
 def _get_link_info(entry, display_text="View Publication"):
     """Get link URL and text from entry (DOI preferred over URL)"""
     doi = entry.fields.get("doi", "").strip()
@@ -502,10 +510,14 @@ def parse_bibtex_card_mode(bibtex_path, selected_only=False):
                 ]
             )
 
-            if link_url:
-                parts.append(
-                    f'                    <a href="{html.escape(link_url)}" target="_blank" rel="noopener noreferrer" class="publication-link">{html.escape(link_text)}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link ml-0.5 inline-block h-4 w-4" aria-hidden="true"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg></a>'
-                )
+            links = [(link_url, link_text)] if link_url else []
+            code_url = entry.fields.get("code", "").strip()
+            if code_url:
+                links.append((code_url, "Code"))
+            if links:
+                parts.append('                    <div class="publication-links">')
+                parts.extend(_link_html(url, text) for url, text in links)
+                parts.append("                    </div>")
 
             parts.append("                </div>")
             html_parts.append("\n".join(parts))

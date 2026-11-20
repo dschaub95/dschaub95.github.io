@@ -598,6 +598,12 @@ h2 {
     font-weight: 600;
 }
 
+.publication-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
 .publication-link {
     display: inline-flex;
     align-items: center;
