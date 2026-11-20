@@ -400,17 +400,10 @@ def _link_html(url, text):
     return f'                        <a href="{html.escape(url)}" target="_blank" rel="noopener noreferrer" class="publication-link">{html.escape(text)}{_EXTERNAL_LINK_ICON}</a>'
 
 
-def _get_link_info(entry, display_text="View Publication"):
-    """Get link URL and text from entry (DOI preferred over URL)"""
+def _get_link_url(entry):
+    """Get publication URL (DOI preferred over URL)"""
     doi = entry.fields.get("doi", "").strip()
-    if doi:
-        return f"https://doi.org/{doi}", display_text
-
-    url = entry.fields.get("url", "").strip()
-    if url:
-        return url, display_text
-
-    return "", ""
+    return f"https://doi.org/{doi}" if doi else entry.fields.get("url", "").strip()
 
 
 def _parse_year(year_str):
@@ -491,7 +484,7 @@ def parse_bibtex_card_mode(bibtex_path, selected_only=False):
             title = _clean_title(entry.fields.get("title", "").strip())
             journal = _get_journal(entry)
             year = entry.fields.get("year", "").strip()
-            link_url, link_text = _get_link_info(entry)
+            link_url = _get_link_url(entry)
             authors = _format_authors(entry, style, backend, sorted_bib_data)
 
             # Build HTML structure
@@ -510,7 +503,7 @@ def parse_bibtex_card_mode(bibtex_path, selected_only=False):
                 ]
             )
 
-            links = [(link_url, link_text)] if link_url else []
+            links = [(link_url, "View Publication")] if link_url else []
             code_url = entry.fields.get("code", "").strip()
             if code_url:
                 links.append((code_url, "Code"))
