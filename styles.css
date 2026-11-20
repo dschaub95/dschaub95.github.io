@@ -602,6 +602,7 @@ h2 {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+    margin-top: 4px;
 }
 
 .publication-link {
@@ -618,7 +619,6 @@ h2 {
     cursor: pointer;
     transition: background-color 0.2s;
     width: fit-content;
-    margin-top: 4px;
 }
 
 .publication-link:hover {
